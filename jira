@@ -1,0 +1,21 @@
+#!/bin/bash
+
+JIRA_URL="https://__URL_TO_YOUR_JIRA_INSTANCE__/browse/"
+# example: https://jira.google.com/browse/"
+
+BRANCH=`git rev-parse --abbrev-ref HEAD 2>/dev/null`
+if [ "$BRANCH" ]
+then
+	JIRA_ISSUE=`echo "$BRANCH" | sed -E -n "s/^.+\/([a-bA-Z]+-[0-9]+).*$/\1/p"`
+	if [ $JIRA_ISSUE ]
+	then
+		URL="${JIRA_URL}${JIRA_ISSUE}"
+		echo -e "\033[1;32mGo to >> \033[4m${URL}\033[24m\033[00m" 
+		open $URL
+	else
+	echo -e "\033[1;31mJIRA issue not matched!\033[00m"
+	fi
+else
+	echo -e "\033[1;31mGIT Repository not found!\033[00m"
+fi
+
