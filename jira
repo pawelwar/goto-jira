@@ -3,6 +3,28 @@
 JIRA_URL="https://__URL_TO_YOUR_JIRA_INSTANCE__/browse/"
 # example: https://jira.google.com/browse/"
 
+function print {
+	MESSAGE=$1
+	COLOR=$2
+	echo -e "${COLOR}${MESSAGE}\033[00m"
+}
+
+function open_url {
+	if [  $BROWSER ]; then
+		$BROWSER $URL
+	elif which xdg-open > /dev/null; then
+		xdg-open $URL
+	elif which gnome-open > /dev/null; then
+		gnome-open $URL
+	elif which open > /dev/null; then
+		open $URL
+	elif which x-www-browser > /dev/null; then	
+		x-www-browser $URL
+	else
+		print "Could not detect the web browser to use!" "\033[1;31m"
+	fi
+}
+
 BRANCH=`git rev-parse --abbrev-ref HEAD 2>/dev/null`
 if [ "$BRANCH" ]
 then
@@ -11,11 +33,12 @@ then
 	then
 		URL="${JIRA_URL}${JIRA_ISSUE}"
 		echo -e "\033[1;32mGo to >> \033[4m${URL}\033[24m\033[00m" 
-		open $URL
+		open_url "$URL"
 	else
-	echo -e "\033[1;31mJIRA issue not matched!\033[00m"
+		print "JIRA issue not matched!" "\033[1;31m"
 	fi
 else
-	echo -e "\033[1;31mGIT Repository not found!\033[00m"
+	print "GIT Repository not found!" "\033[1;31m"
 fi
+
 
