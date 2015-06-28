@@ -4,22 +4,25 @@ JIRA_URL="https://__URL_TO_YOUR_JIRA_INSTANCE__/browse/"
 # example: https://jira.google.com/browse/"
 
 function print {
-	MESSAGE=$1
-	COLOR=$2
-	echo -e "${COLOR}${MESSAGE}\033[00m"
+	F_MESSAGE=$1
+	F_COLOR=$2
+	echo -e "${F_COLOR}${F_MESSAGE}\033[00m"
 }
 
 function open_url {
+	F_URL=$1
 	if [  $BROWSER ]; then
-		$BROWSER $URL
+		$BROWSER $F_URL
 	elif which xdg-open > /dev/null; then
-		xdg-open $URL
+		xdg-open $F_URL
 	elif which gnome-open > /dev/null; then
-		gnome-open $URL
+		gnome-open $F_URL
 	elif which open > /dev/null; then
-		open $URL
+		open $F_URL
 	elif which x-www-browser > /dev/null; then	
-		x-www-browser $URL
+		x-www-browser $F_URL
+	elif which lynx > /dev/null; then	
+		lynx $F_URL
 	else
 		print "Could not detect the web browser to use!" "\033[1;31m"
 	fi
